@@ -1,0 +1,87 @@
+﻿/* ==========================================================================
+   ЕДИНЫЙ КОРРЕКТНЫЙ СТИЛЬ ПЕЧАТИ (print.css)
+   ========================================================================== */
+
+@media print {
+    
+    /* 1. ТОТАЛЬНАЯ ЗАЧИСТКА ИНТЕРФЕЙСА (Убираем всё, кроме самого текста) */
+    .top-tabs, 
+    .sidebar, 
+    #winchm_template_button, 
+    #winchm_template_navigation, 
+    #nav-trigger, 
+    #winchm_template_footer,
+    .audio-toggle-btn { 
+        display: none !important; 
+    }
+
+    /* 2. ПОДГОТОВКА ФУНДАМЕНТА (Растягиваем на весь лист, убираем скроллы) */
+    html, body { 
+        width: 100% !important;
+        height: auto !important; 
+        overflow: visible !important; 
+        background: white !important;
+        color: #000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* 3. РАСКРЫВАЕМ КОНТЕЙНЕРЫ (Убиваем фиксацию, флексы и абсолюты) */
+    .main-container, 
+    .content-area, 
+    #winchm_template_container, 
+    #winchm_template_content { 
+        display: block !important; 
+        position: static !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        width: 100% !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* 4. ШАПКА СТРАНИЦЫ (Если это заголовок статьи - оставляем статичным вверху) */
+    #winchm_template_top {
+        display: block !important;
+        position: static !important;
+        width: auto !important;
+        height: auto !important;
+        margin-bottom: 15px !important;
+    } 
+
+    /* 5. РАСКРЫТИЕ IFRAME И РОДИТЕЛЬСКОГО КОНТЕЙНЕРА */
+    iframe {
+        display: block !important;
+        width: 100% !important;
+        height: 5000px !important;
+        border: none !important;
+        overflow: visible !important;
+    }
+
+    /* 6. БОРЬБА С МУСОРОМ И ПЕРЕНОСАМИ */
+    p:empty, 
+    p:blank, 
+    br + br {
+        display: none !important;
+    }
+
+    p, h1, h2, h3, li, tr, img { 
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    /* Полный запрет на отображение скриптов как текста */
+    script { 
+        display: none !important; 
+        visibility: hidden !important;
+        height: 0 !important;
+    }
+
+    /* Настройки полей страницы */
+    @page {
+        size: auto;
+        margin: 0.5cm;
+    }
+}

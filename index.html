@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Мемориал: OneNote Edition</title>
+<link rel="stylesheet" type="text/css" href="print.css">
+<meta charset="UTF-8">
+<link rel="shortcut icon" href="1_saga/template2/favicon.ico" type="image/x-icon">
+<style>
+  /* ОСНОВНОЙ ФОН И ШРИФТЫ ВСЕГО САЙТА */
+  body { 
+    background: #e6e6e6; /* Основной фон страницы. */
+    color: #333;         /* Цвет текста по умолчанию. */
+    font-family: 'Segoe UI', Tahoma, sans-serif; 
+    margin: 0;          
+    overflow: hidden;    /* Управление прокруткой. */
+  }
+  
+  /* ВЕРХНЯЯ ПАНЕЛЬ (ВКЛАДКИ) */
+  .top-tabs { 
+    background: #80397b;       /* Фон панели. бренд-цвет OneNote */  
+    padding: 5px 10px 0 10px;  
+    display: flex;             
+    height: 40px;              /* Ширина фиолетовой полосы */
+  }
+  
+  /* КНОПКИ-ВКЛАДКИ */
+  .top-tabs a { 
+    background: #ab59a2;        /* Цвет вкладки: более светлый фиолетовый, чтобы выделялся на темном фоне */
+    color: white;               /* Цвет текста: чистый белый для идеального контраста */
+    text-decoration: none;      /* Убираем подчеркивание: срезаем стандартную синюю линию ссылки */
+    padding: 8px 20px;          /* Внутренние отступы: 8px сверху/снизу и 20px слева/справа (создают объем кнопки) */
+    margin-right: 2px;          /* Внешний отступ: зазор в 2 пикселя справа, чтобы вкладки не слипались друг с другом */
+    border-radius: 5px 5px 0 0; /* Скругление углов: 5px сверху-слева и сверху-справа, снизу оставляем острые углы (0 и 0) */
+    font-size: 14px;            /* Размер шрифта: высота букв текста вкладки ровно 14 пикселей */
+    display: inline-block;      /* Режим отображения: превращаем строчную ссылку в блок, чтобы работали отступы и скругления */
+  }
+  
+  /* ВЫБРАННАЯ ВКЛАДКА */
+  .top-tabs a.active { 
+    background: #FAEEEE; /* Фон активной вкладки: очень светлый, почти белый с легким розовым оттенком. Он сливается с телом сайта */
+    color: #80397b;      /* Цвет текста: красит буквы в темно-фиолетовый цвет, как у основной панели, чтобы выделить название */
+  }
+
+  /* ГЛАВНЫЙ КОНТЕЙНЕР */
+  .main-container { 
+    display: flex;               /* Включаем Flexbox: выстраивает сайдбар и окно текста в один горизонтальный ряд (бок о бок) */
+    width: 100%;                 /* Ширина контейнера: растягивается ровно на 100% от всей ширины экрана монитора */
+    height: calc(100vh - 45px);  /* Высота контейнера: хитрая математика. Берем всю высоту экрана (100vh) и вычитаем 45 пикселей (высота верхней панели с запасом), чтобы сайт не вылезал за границы экрана вниз */
+  }
+  
+   /* Левая панель с плавной анимацией */
+  .sidebar {  
+    width: 200px;                 /* Ширина панели: левая колонка всегда будет занимать ровно 200 пикселей */
+    background: #FAEEEE;          /* Фон панели: тот самый светлый, нежно-розоватый оттенок, как у активной вкладки */
+    border-right: 1px solid #ccc; /* Правая граница: аккуратная серая линия толщиной в 1 пиксель, отделяющая список глав от текста */
+    padding: 0 10px 10px 10px;    /* Внутренние отступы: 0 сверху (чтобы прилипать к топ-панели), по 10px справа, снизу и слева для воздуха */
+    transition: all 0.3s ease;    /* Плавная анимация: если мы решим скрывать или расширять панель, это произойдет мягко за 0.3 секунды */
+	flex-shrink: 0;               /* чтобы он не сжимался по высоте.*/
+
+  }
+  
+  /* Параметры, когда панель скрыта */
+  .sidebar.hidden { 
+    width: 0;         /* Схлопываем ширину: панель ужимается до 0 пикселей */
+    padding: 0;       /* Обнуляем внутренние отступы: чтобы скрытый текст внутри не распирал нулевую ширину */
+    border: none;     /* Убираем границу: серая разделительная линия справа полностью исчезает */
+    margin: 0;        /* Обнуляем внешние отступы: на всякий случай, чтобы панель не занимала ни единого пикселя */
+    opacity: 0;       /* Полная прозрачность: делает панель и весь её текст абсолютно невидимыми */
+  }
+  
+  /* ЛЕВЫЙ КОНТЕЙНЕР nen , тут были хлебные крошки(Обертка для заголовка сайдбара) */
+  #sidebar-header-wrapper {
+     margin-top: 0px;
+     margin-bottom: 0px;
+     margin-left: -10px;               /* Выталкиваем блок влево до упора, компенсируя левый padding сайдбара */
+     margin-right: -10px;              /* Выталкиваем блок вправо до упора — ЛИНИЯ ЗАМКНЁТСЯ НА ВЕРТИКАЛЬНЫЙ РАЗДЕЛИТЕЛЬ! */
+     padding-top: 11px;                 /* Отступ сверху для баланса */
+     padding-left: 20px;               /* Было 10px, добавили 10px, чтобы текст «Главы:» не съехал влево и остался на месте */
+     padding-bottom: 10px;              /* Отступ снизу до нашей линии */
+     padding-right: 0px;
+     background: #FAEEEE;              /* Наш фирменный светлый фон */
+     border-bottom: 1px solid #9B9B9B; /* Теперь эта черта дойдёт ровно до вертикальной границы сайдбара */
+	 box-sizing: border-box;           /* БРОНЕБОЙНОЕ ВЫРАВНИВАНИЕ ДЛЯ ИСКЛЮЧЕНИЯ ПОЛУПИКСЕЛЕЙ */
+  }
+
+  #sidebar-header-wrapper h4 {
+      margin: 0; 
+      padding: 0;
+      font-size: 18px;                 /* Тот же мелкий, аккуратный шрифт, как в главах */
+      font-family: Verdana, Geneva, sans-serif; /* Тот же шрифт */
+	  text-align: center;               /* Центрируем текст */
+      font-weight: bold;              /* Жирный, а аккуратный как крошки */
+      color: #333;                   /* Сдержанный тёмно серый цвет текста */
+  }
+  
+  /* БЛОКИ ГЛАВ (Кликабельные ссылки в левом меню) */
+  .sidebar a { 
+    display: flex;                    /* Включаем флекс-режим для строки */
+    justify-content: space-between;   /* Разбрасываем текст влево, кнопку вправо */
+    align-items: center;              /* Центрируем их ровно по вертикали */
+    padding: 8px;                     /* Добавляем воздуха: уютный зазор, чтобы строчки дышали и не слипались в кашу */
+    color: #333;                      /* Благородный тёмно-серый графит — строгий, уверенный и не режущий глаз цвет */
+    text-decoration: none;            /* Срываем дефолтное подчёркивание — у нас тут солидный интерфейс, а не привет из девяностых */
+    border-bottom: 1px solid #e0e0e0; /* Тончайшая светло-серая нить под каждой главой для идеального визуального ритма */
+    font-size: 14px;                  /* Аккуратный кегль, золотая середина для боковой навигации */
+    white-space: nowrap;              /* Жёсткий приказ тексту не переноситься вниз — все слова выстроены по стойке смирно строго в один ряд */
+  }
+  
+   /* Магия при наведении курсора */
+  .sidebar a:hover { 
+    background-color: #ffffff !important; /* Вспышка чистого белого фона под курсором — пункт меню мгновенно подсвечивается */
+    color: #80397b !important;            /* Буквы перекрашиваются в наш благородный фиолетовый цвет OneNote */
+    font-weight: bold;                    /* Текст наливается силой и становится жирным, сигнализируя: «Кликни меня!» */
+  }
+  
+  /* ВЫБРАННАЯ ГЛАВА (Стиль для текущей открытой темы) */
+  .sidebar a.active-chapter { 
+    background-color: #fff !important;                          /* Белый фон, чтобы пункт сливался с правым рабочим окном */
+    color: #80397b !important;                                  /* Фирменный фиолетовый цвет текста OneNote */
+    font-weight: bold;                                          /* Жирный шрифт для максимального акцента */
+    margin-right: -11px;                                        /* Выталкиваем блок вправо, перекрывая границу сайдбара */
+    padding-right: 19px;                                        /* Компенсируем сдвиг, чтобы текст внутри не уехал */
+    position: relative;                                         /* Включаем режим позиционирования для работы слоёв */
+    z-index: 2;                                                 /* Поднимаем блок на слой выше, чтобы он перекрыл рамку */
+    border-top: 1px solid #9B9B9B !important;                   /* Чёткая верхняя граница активной вкладки */
+    box-shadow: inset 4px 4px 8px -3px rgba(128, 57, 123, 0.3); /* Мягкая внутренняя фиолетовая тень для эффекта глубины */
+  }
+  /* Отменяем верхнюю линию ТОЛЬКО для самой первой главы в списке, чтобы она не дублировалась с шапкой */
+.sidebar a.active-chapter:first-of-type {
+    border-top: none !important;
+}
+  
+  /* оформление контейнера для основного контента */
+  .content-area { flex-grow: 1; background: #fff; position: relative; }
+  /* фрейм и его параметры */
+  iframe { width: 100%; height: 100%; border: none; }
+  
+  .nav-buttons img {
+    max-height: 40px; 
+    width: auto;      
+  }
+  
+ /* == КНОПКА АУДИОПЛЕЕРА (Внутри ссылки первой главы)== */
+	 
+  .audio-toggle-btn {
+    width: 24px;                  /* Фиксированная ширина круглой основы кнопки */
+    height: 24px;                 /* Фиксированная высота круглой основы кнопки */
+    background-color: #8c478c;    /* Базовый фиолетовый цвет кнопки в тон OneNote */
+    border: none;                 /* Срезаем стандартную рамку кнопки браузера */
+    border-radius: 50%;           /* Идеальное скругление: превращаем квадратную кнопку в круг */
+    cursor: pointer;              /* Меняем указатель мыши на пальчик при наведении */
+    position: relative;           /* Включаем позиционирование для правильного отсчета координат внутренностей */
+    display: inline-block;        /* Переводим в inline-block для стабильного позиционирования */
+    vertical-align: middle;       /* Выравниваем саму круглую кнопку по центру текстовой строки главы */
+    flex-shrink: 0;               /* Запрещаем кнопке сжиматься, если название главы длинное */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Легкая тень под кнопкой для объема */
+  }
+
+ /* СОСТОЯНИЕ PLAY: Рисуем увеличенный треугольник через границы (border) */
+  .audio-toggle-btn::before {
+    content: '';                  /* Обязательный пустой контент для генерации псевдоэлемента */
+    position: absolute;           /* Жесткое абсолютное позиционирование */
+    top: 50%;                     /* Смещаем верхнюю точку ровно на половину высоты кнопки */
+    left: 50%;                    /* Смещаем левую точку ровно на половину ширины кнопки */
+    transform: translate(-35%, -50%); /* Центрируем с микро-сдвигом вправо для оптического баланса треугольника */
+    width: 0;                     /* Схлопываем ширину самого элемента в ноль */
+    height: 0;                    /* Схлопываем высоту самого элемента в ноль */
+    border-style: solid;          /* Задаем сплошной тип линий для будущих границ */
+    border-width: 7px 0 7px 11px; /* Размеры стрелки: высота 14px (7+7), длина 11px */
+    border-color: transparent transparent transparent #ffffff; /* Формируем белый треугольник */
+    transition: all 0.1s ease;    /* Плавный переход формы при смене состояний */
+  }
+
+  /* СОСТОЯНИЕ STOP: Превращаем треугольник в сочный увеличенный квадрат */
+  .audio-toggle-btn.playing::before {
+    top: 50%;                     /* Удерживаем позицию строго по центру */
+    left: 50%;                    /* Удерживаем позицию строго по центру */
+    transform: translate(-50%, -50%); /* Центрируем квадрат идеально по осям без всяких сдвигов */
+    border-width: 0;              /* Полностью сбрасываем толщину рамки треугольника */
+    border-color: transparent;    /* Делаем старые границы невидимыми */
+    width: 10px;                  /* Задаем фиксированную ширину квадрата (10px) */
+    height: 10px;                 /* Задаем фиксированную высоту квадрата (10px) */
+    background-color: #ffffff;    /* Заливаем получившийся кубик чистым белым цветом */
+  }
+  
+</style>
+</head>
+<body>
+
+<div class="top-tabs">
+  <a href="#" id="tab-saga" class="active" onclick="switchTab(event, 'saga')">Сага про чемоданы</a>
+<!--   <a href="#" id="tab-stadium" onclick="switchTab(event, 'stadium')">Будущая история №2</a>
+  <a href="#" id="tab-zen" onclick="switchTab(event, 'zen')">Архив песен</a>
+ --></div>
+<div class="main-container">
+<div class="sidebar">
+    <div id="sidebar-header-wrapper">
+      <h4>Главы:</h4>
+    </div>
+    
+    <!-- НАБОР ГЛАВ №1: САГА ПРО ЧЕМОДАНЫ -->
+    <div id="menu-saga" class="menu-group">
+      <a href="1_saga/1._Носки_и_Виталий_Валерьевич.htm" target="view" onclick="selectMenuItem(this)">1. Носки и В.В. <button id="play-intro-btn" class="audio-toggle-btn" title="Воспроизвести" onclick="event.stopPropagation();"></button></a>
+      <a href="1_saga/2._Трансформатор.htm" target="view" onclick="selectMenuItem(this)">2. Трёхфазный</a>
+      <a href="1_saga/3._Маяковский_.htm" target="view" onclick="selectMenuItem(this)">3. Маяковский</a>
+      <a href="1_saga/4._Про_двух_Владимиров_.htm" target="view" onclick="selectMenuItem(this)">4. Два Владимира</a>
+      <a href="1_saga/5._Big_Gun.htm" target="view" onclick="selectMenuItem(this)">5. Big Gun</a>
+      <a href="1_saga/6._Финал.htm" target="view" onclick="selectMenuItem(this)">6. Финал</a>
+    </div>
+
+    <!-- НАБОР ГЛАВ №2: СТАДИОН (ВТОРАЯ ВКЛАДКА) -->
+    <div id="menu-stadium" class="menu-group" style="display: none;">
+      <!-- Тут пока одна ссылка для теста, потом добавите остальные файлы из 2_stadium -->
+      <a href="2_stadium/index.htm" target="view" onclick="selectMenuItem(this)">1. Стадион: Начало</a>
+    </div>
+
+    <!-- НАБОР ГЛАВ №3: ДЗЕН (ТРЕТЬЯ ВКЛАДКА) -->
+    <div id="menu-zen" class="menu-group" style="display: none;">
+      <a href="3_zen/index.htm" target="view" onclick="selectMenuItem(this)">1. Дзен: Главная</a>
+    </div>
+  </div>
+<audio id="intro-audio" src="1_saga/media/introduction.mp3"></audio>
+
+  <div class="content-area">
+    <article class="reader-only" style="display: none;">
+      <h1>Сага про чемоданы</h1>
+      <p>Интерактивная история. Выберите главу в меню для чтения.</p>
+    </article>
+    <iframe name="view" src="1_saga/1._Носки_и_Виталий_Валерьевич.htm"></iframe>
+  </div>
+</div>
+
+<script>
+// 1. Детектор мобильных
+function isMobile(){
+    var Agent = window.navigator.userAgent;
+    return (Agent.indexOf("iPhone")>=1 || Agent.indexOf("iPad")>=1 || Agent.indexOf("iPod")>=1 || Agent.indexOf("Android")>=1);
+}
+
+// 1.5 Переключение вкладок и меню
+function switchTab(event, menuId) {
+    if (event) event.preventDefault(); // Отменяем прыжок по ссылке '#'
+
+    // 1. Снимаем класс active со всех верхних вкладок
+    document.querySelectorAll('.top-tabs a').forEach(function(tab) {
+        tab.classList.remove('active');
+    });
+    // Добавляем active той, на которую кликнули
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
+
+    // 2. Прячем все группы меню в сайдбаре
+    document.querySelectorAll('.menu-group').forEach(function(group) {
+        group.style.display = 'none';
+    });
+    // Показываем нужную группу
+    var activeMenu = document.getElementById('menu-' + menuId);
+    if (activeMenu) {
+        activeMenu.style.display = 'block';
+        
+        // 3. Автоматически кликаем по первой ссылке в открывшемся меню,
+        // чтобы контент во фрейме обновлялся сразу при смене вкладки
+        var firstLink = activeMenu.querySelector('a');
+        if (firstLink) {
+            firstLink.click();
+        }
+    }
+}
+
+// 2. Управление панелью
+function toggleSidebar(state) { 
+    var sidebar = document.querySelector('.sidebar'); 
+    if (!sidebar) return;
+
+    if (state === 'hide') {
+        sidebar.classList.add('hidden'); 
+    } else if (state === 'show') {
+        sidebar.classList.remove('hidden'); 
+    } else {
+        sidebar.classList.toggle('hidden'); 
+    }
+
+    var isHidden = sidebar.classList.contains('hidden');
+    localStorage.setItem('sidebar_hidden', isHidden);
+
+    var iframe = document.getElementById('content-frame') || document.querySelector('iframe');
+    if (iframe && iframe.contentWindow) {
+        var status = isHidden ? 'sidebar-is-hidden' : 'sidebar-is-visible';
+        iframe.contentWindow.postMessage(status, '*');
+    }
+}
+
+// 3. Покраска глав и авто-скрытие аудиокнопки
+function syncMenu(pageName) { 
+    var links = document.querySelectorAll('.sidebar a'); 
+    var playBtn = document.getElementById('play-intro-btn'); 
+    
+    links.forEach(function(link) { 
+        var href = link.getAttribute('href'); 
+        // Проверяем совпадение имени файла, игнорируя имя папки в пути
+        if (href && pageName && href.split('/').pop() === pageName.split('/').pop()) { 
+            link.classList.add('active-chapter'); 
+        } else { 
+            link.classList.remove('active-chapter'); 
+        } 
+    }); 
+
+    // Управление кнопкой аудио (только для самой первой главы первой саги)
+    if (playBtn) {
+        if (pageName.indexOf("1._Носки_и_Виталий_Валерьевич.htm") !== -1) {
+            playBtn.style.display = "inline-block"; 
+        } else {
+            playBtn.style.display = "none";         
+            
+            var audio = document.getElementById('intro-audio');
+            if (audio && !audio.paused) {
+                audio.pause();
+                audio.currentTime = 0;
+                playBtn.classList.remove('playing');
+            }
+        }
+    }
+}
+
+// 4. Слушатель команд из глав
+window.addEventListener('message', function(event) { 
+    if (typeof event.data === 'string') { 
+        if (event.data === 'trigger-print') {
+            window.print();
+        } else if (event.data === 'toggle-sidebar') { 
+            toggleSidebar(); 
+        } else if (event.data.indexOf('.htm') !== -1) { 
+            syncMenu(event.data); 
+        } else if (event.data === 'get-sidebar-status') { 
+            var sidebar = document.querySelector('.sidebar'); 
+            if (sidebar) {
+                var status = sidebar.classList.contains('hidden') ? 'sidebar-is-hidden' : 'sidebar-is-visible'; 
+                event.source.postMessage(status, event.origin); 
+            }
+        } 
+    } 
+});
+
+// 5. Загрузка
+window.onload = function() {
+    syncMenu("1._Носки_и_Виталий_Валерьевич.htm"); 
+    
+    if (typeof isMobile === "function" && isMobile()) { 
+        toggleSidebar('hide'); 
+    } else {
+        var isHiddenCache = localStorage.getItem('sidebar_hidden') === 'true';
+        toggleSidebar(isHiddenCache ? 'hide' : 'show');
+    }
+};
+// 6. Плеер вступления первой главы
+document.addEventListener('DOMContentLoaded', () => {
+    const audio = document.getElementById('intro-audio');
+    const playBtn = document.getElementById('play-intro-btn');
+
+    if (playBtn && audio) {
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playBtn.classList.add('playing');
+            } else {
+                audio.pause();
+                audio.currentTime = 0;
+                playBtn.classList.remove('playing');
+            }
+        });
+
+        audio.addEventListener('ended', () => {
+            playBtn.classList.remove('playing');
+        });
+    }
+});
+// 7. Сквозной перехват Ctrl+P для родительского окна
+document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P' || e.keyCode === 80)) {
+        e.preventDefault();
+        var frame = document.querySelector('iframe[name="view"]') || document.querySelector('iframe');
+        if (frame && frame.contentWindow) {
+            frame.contentWindow.focus();
+            frame.contentWindow.print();
+        }
+    }
+}, true);
+
+// 8. Блокировка ПКМ на элементах управления (шапка, меню)
+// Чтобы пользователь не мог случайно напечатать обрезанную обертку
+document.addEventListener('contextmenu', function(e) {
+    // Если клик был по элементам интерфейса, а не внутри фрейма — гасим меню
+    if (e.target.tagName !== 'IFRAME') {
+        e.preventDefault();
+    }
+});
+
+</script>
+
+</body>
+</html>
