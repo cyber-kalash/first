@@ -1,0 +1,69 @@
+﻿/* ==========================================================================
+   ГРУППА PRINT. СТИЛИ ПЕЧАТИ И ЭКСПОРТА (print.css)
+   ========================================================================== */
+
+@media print {
+
+    /* --- PRINT.1. СКРЫТИЕ ЭЛЕМЕНТОВ ИНТЕРФЕЙСА --- */
+    .sidebar,
+    .top-tabs,
+    .nav-buttons,
+    #play-intro-btn,
+    .header-logo-icon {
+        display: none !important;
+    }
+
+    /* --- PRINT.2. СБРОС ОГРАНИЧЕНИЙ ВЫСОТЫ И ПРОКРУТКИ --- */
+    html, body, .main-container, .content-area, main, #main-content {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        position: static !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+
+    /* --- PRINT.3. ОФОРМЛЕНИЕ ШАПКИ И ЗАГОЛОВКА ГЛАВЫ --- */
+    .content-header {
+        border-bottom: 2px solid #000000 !important;
+        padding-bottom: 10px !important;
+        margin-bottom: 20px !important;
+        background: transparent !important;
+    }
+
+    #chapter-title {
+        font-size: 18pt !important;
+        color: #000000 !important;
+    }
+
+    /* --- PRINT.4. НАСТРОЙКИ ШРИФТА ОСНОВНОГО ТЕКСТА --- */
+    body #main-content, 
+    body #main-content p, 
+    body #main-content span, 
+    body #main-content li, 
+    body #main-content div,
+    html body .sidebar.hidden ~ .content-area #main-content,
+    html body .sidebar.hidden ~ .content-area #main-content p,
+    html body .sidebar.hidden ~ .content-area #main-content span,
+    html body .sidebar.hidden ~ .content-area #main-content li,
+    html body .sidebar.hidden ~ .content-area #main-content div {
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+        color: #000000 !important;
+    }
+
+   /* --- PRINT.5. ПРАВИЛА ОТОБРАЖЕНИЯ ИЗОБРАЖЕНИЙ И МЕДИА --- */
+    img, video, iframe, figure {
+        max-width: 100% !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    /* --- PRINT.6. СКРЫТИЕ СЛУЖЕБНЫХ ИИ-БЛОКОВ --- */
+    .ai-hidden-room {
+        display: none !important;
+    }
+}
